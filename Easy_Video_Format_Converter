@@ -1,0 +1,79 @@
+import sys
+from pathlib import Path
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QFileDialog, QMessageBox, QComboBox, QLabel
+from PyQt5.QtGui import QFont
+from PyQt5.QtCore import Qt
+from moviepy.editor import VideoFileClip
+
+class ConverterApp(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('Video Converter')
+        self.setGeometry(300, 300, 450, 250)
+        
+        # Set overall layout and style
+        self.layout = QVBoxLayout()
+        self.setStyleSheet("background-color: #f0f0f0;")
+
+        # Title Label
+        self.title_label = QLabel("Video Converter", self)
+        self.title_label.setFont(QFont('Arial', 18, QFont.Bold))
+        self.title_label.setStyleSheet("color: #2C3E50; margin-bottom: 20px;")
+        self.title_label.setAlignment(Qt.AlignCenter)
+        self.layout.addWidget(self.title_label)
+
+        # Label for the output format selection
+        self.format_label = QLabel("Select Output Format:", self)
+        self.format_label.setFont(QFont('Arial', 12))
+        self.format_label.setStyleSheet("color: #34495E;")
+        self.layout.addWidget(self.format_label)
+
+        # Combo box for selecting the output format
+        self.format_combo = QComboBox(self)
+        self.format_combo.setFont(QFont('Arial', 11))
+        self.format_combo.setStyleSheet("padding: 5px; background-color: #ECF0F1; border: 1px solid #BDC3C7;")
+        self.format_combo.addItems(["mp4", "avi", "mov", "flv", "wmv", "mkv"])
+        self.layout.addWidget(self.format_combo)
+
+        # Button to start the conversion process
+        self.convert_button = QPushButton('Select Video File and Convert', self)
+        self.convert_button.setFont(QFont('Arial', 11, QFont.Bold))
+        self.convert_button.setStyleSheet("background-color: #3498DB; color: white; padding: 10px; border-radius: 5px;")
+        self.convert_button.clicked.connect(self.convert_video)
+        self.layout.addWidget(self.convert_button)
+
+        self.setLayout(self.layout)
+
+    def convert_video(self):
+        # Ask the user to select a video file
+        video_file_path, _ = QFileDialog.getOpenFileName(self, "Select Video File", "", "Video files (*.mp4 *.avi *.mov *.flv *.wmv *.mkv)")
+        if not video_file_path:
+            QMessageBox.warning(self, "No File Selected", "Please select a video file to convert.")
+            return
+
+        # Get the selected output format from the combo box
+        selected_format = self.format_combo.currentText()
+
+        # Ask the user to select the destination and output file name
+        output_file_path, _ = QFileDialog.getSaveFileName(self, "Save Converted File As", str(Path(video_file_path).with_suffix(f".{selected_format}")), f"{selected_format.upper()} files (*.{selected_format})")
+        if not output_file_path:
+            QMessageBox.warning(self, "No Destination Selected", "Please select a destination for the converted file.")
+            return
+
+        try:
+            # Load the video file and convert it to the chosen format
+            video_clip = VideoFileClip(video_file_path)
+            video_clip.write_videofile(output_file_path, codec="libx264", audio_codec="aac")
+            QMessageBox.information(self, "Success", f"File converted successfully!\nSaved as: {output_file_path}")
+
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"An error occurred during conversion: {str(e)}")
+
+def main():
+    app = QApplication(sys.argv)
+    window = ConverterApp()
+    window.show()
+    sys.exit(app.exec_())
+
+if __name__ == '__main__':
+    main()
