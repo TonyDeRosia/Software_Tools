@@ -44,8 +44,12 @@ class AffiliateReportApp(QtWidgets.QMainWindow):
         self.create_menu()
         self.setWindowTitle("Sales Report")
         
-        self.logo_pixmap = QtGui.QPixmap("C:/Users/antho/Documents/Python/logo.png/Funnel Pursuit.png")
-        self.setWindowIcon(QtGui.QIcon(self.logo_pixmap))
+        # Try to load an application icon from a file located next to this
+        # script.  If the icon does not exist the application will still run
+        # without setting a window icon.
+        icon_path = os.path.join(os.path.dirname(__file__), "Funnel Pursuit.png")
+        if os.path.exists(icon_path):
+            self.setWindowIcon(QtGui.QIcon(icon_path))
         self.resize(1300, 400)
         self.central_widget = QtWidgets.QWidget(self)
         

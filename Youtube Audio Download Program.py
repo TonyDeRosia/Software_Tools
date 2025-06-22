@@ -17,8 +17,10 @@ class Application(QtWidgets.QMainWindow):
         self.setWindowTitle("YouTube Video Downloader")
         self.resize(400, 200)
 
-        self.logo_pixmap = QtGui.QPixmap("C:/Users/antho/Documents/Python/logo.png/Funnel Pursuit.png")
-        self.setWindowIcon(QtGui.QIcon(self.logo_pixmap))
+        # Optional application icon loaded from the same directory as this file
+        icon_path = os.path.join(os.path.dirname(__file__), "Funnel Pursuit.png")
+        if os.path.exists(icon_path):
+            self.setWindowIcon(QtGui.QIcon(icon_path))
 
         self.central_widget = QtWidgets.QWidget(self)
 
@@ -117,8 +119,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setWindowTitle("YouTube Video Downloader")
         self.resize(400, 200)
 
-        self.logo_pixmap = QtGui.QPixmap("C:/Users/antho/Documents/Python/logo.png/Funnel Pursuit.png")
-        self.setWindowIcon(QtGui.QIcon(self.logo_pixmap))
+        icon_path = os.path.join(os.path.dirname(__file__), "Funnel Pursuit.png")
+        if os.path.exists(icon_path):
+            self.setWindowIcon(QtGui.QIcon(icon_path))
 
         self.central_widget = QtWidgets.QWidget(self)
 

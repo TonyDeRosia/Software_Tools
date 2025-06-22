@@ -46,7 +46,12 @@ class FolderUnOrganizer(QtWidgets.QMainWindow):
 
         self.setGeometry(600, 200, 600, 200)
         self.setWindowTitle("Folder Un-Organizer")
-        self.setWindowIcon(QtGui.QIcon("C:\\Users\\antho\\Downloads\\ico_files\\Funnel Pursuit.ico"))
+        # Attempt to set a window icon from a file in the same directory as this
+        # script. The icon is optional so the application continues even if the
+        # file is not present.
+        icon_path = os.path.join(os.path.dirname(__file__), "Funnel Pursuit.ico")
+        if os.path.exists(icon_path):
+            self.setWindowIcon(QtGui.QIcon(icon_path))
         self.show()
 
     def browse(self):
