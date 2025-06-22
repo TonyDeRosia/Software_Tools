@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import sys
 from pathlib import Path
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QFileDialog, QMessageBox, QComboBox, QLabel
