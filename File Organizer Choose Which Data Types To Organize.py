@@ -22,6 +22,15 @@ def organize_folder():
     selected_folder = folder_path.get()
     selected_data_type = data_type.get()
 
+    def unique_destination(path):
+        base, ext = os.path.splitext(path)
+        counter = 1
+        new_path = path
+        while os.path.exists(new_path):
+            new_path = f"{base}_{counter}{ext}"
+            counter += 1
+        return new_path
+
     if not selected_folder:
         result_label.config(text="Please select a folder first.")
         return
@@ -48,7 +57,7 @@ def organize_folder():
 
         file_extension = os.path.splitext(file)[1]
 
-        if selected_data_type and selected_data_type != file_extension:
+        if selected_data_type not in ("All", "*", "", None) and selected_data_type != file_extension:
             continue
 
         if file_extension not in subfolders:
@@ -67,12 +76,10 @@ def organize_folder():
         for file in file_list:
             file_path = os.path.join(selected_folder, file)
             destination = os.path.join(subfolder_path, file)
+            destination = unique_destination(destination)
             try:
                 os.rename(file_path, destination)
-            except FileExistsError:
-                os.rename(file_path)
-
-            except:
+            except Exception:
                 result_label.config(text="An error occurred while moving the files.")
                 return
 
@@ -91,9 +98,9 @@ label2 = tk.Label(root, text="Data Type:")
 label2.pack(pady=20)
 
 data_type = tk.StringVar()
-data_type.set(".*")
+data_type.set("All")
 
-options = [".*", ".txt", ".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".ppt", ".pptx", ".xls", ".xlsx", ".mp3", ".mp4", ".avi", ".mkv", ".zip", ".rar", ".7z", ".bmp"]
+options = ["All", "*", ".txt", ".jpg", ".jpeg", ".png", ".pdf", ".doc", ".docx", ".ppt", ".pptx", ".xls", ".xlsx", ".mp3", ".mp4", ".avi", ".mkv", ".zip", ".rar", ".7z", ".bmp"]
 
 dropdown = OptionMenu(root, data_type, *options)
 dropdown.pack()
